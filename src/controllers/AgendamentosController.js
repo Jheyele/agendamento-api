@@ -23,7 +23,7 @@ export class AgendamentoController {
     async buscarAgendamento (request, response) {
         const {id} = request.params;
         try {
-            const usuarios = await prismaClient.agendamentos.findFirst({
+            const agendamentos = await prismaClient.agendamentos.findFirst({
                 where: { id: parseInt(id) },
                 select: { 
                     id: true, 
@@ -33,10 +33,45 @@ export class AgendamentoController {
                     usuarios: true
                 }
             });
-            return response.status(200).json(usuarios);
+            return response.status(200).json(agendamentos);
         } catch (error) {
             console.error(error);
-            return response.status(500).json({ error: "Erro ao buscar usuários", detail: error.message });
+            return response.status(500).json({ error: "Erro ao buscar agendamentos", detail: error.message });
+        }
+    }
+
+    async buscarAgendamentos (request, response) {
+        try {
+            const agendamentos = await prismaClient.agendamentos.findMany({
+                include: { 
+                    usuarios: true
+                }
+            });
+            return response.status(200).json(agendamentos);
+        } catch (error) {
+            console.error(error);
+            return response.status(500).json({ error: "Erro ao buscar agendamentos", detail: error.message });
+        }
+    }
+
+    async deletarAgendamento(request, response) { 
+        const { id } = request.params;
+        try {
+            const agendamento = await prismaClient.agendamentos.findFirst({
+                where: { id: parseInt(id) }
+            });
+    
+            if (!agendamento) {
+                return response.status(404).json({message: "Agendamento não encontrado"});
+            }
+    
+            await prismaClient.agendamentos.delete({
+                where: { id: parseInt(id) }
+            });
+            
+            return response.status(204).send();
+        } catch(error) {
+            return response.status(500).json({ error: error})
         }
     }
 

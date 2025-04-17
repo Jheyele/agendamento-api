@@ -10,14 +10,16 @@ const usuarioController = new UsuarioController();
 const agendamentoController = new AgendamentoController();
 const loginController = new LoginController();
 
-router.get("/usuarios", auth,usuarioController.buscarUsuarios)
+router.get("/usuarios", usuarioController.buscarUsuarios)
 router.get("/usuario/:id", usuarioController.buscarUsuarioPorId);
 router.post("/usuario", usuarioController.salvarUsuario)
 router.put("/usuario/:id", usuarioController.atualizarUsuario)
-router.delete("/usuario/:id", authAdmin, usuarioController.deletarUsuario)
+router.delete("/usuario/:id", usuarioController.deletarUsuario)
 
 router.post("/agendamento", agendamentoController.salvarAgendamento)
 router.get("/agendamento/:id", agendamentoController.buscarAgendamento)
+router.get("/agendamentos", agendamentoController.buscarAgendamentos)
+router.delete("/agendamento/:id", agendamentoController.deletarAgendamento)
 
 router.post("/login", loginController.login)
 
